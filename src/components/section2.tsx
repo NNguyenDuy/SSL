@@ -73,7 +73,7 @@ export const Section2 = () => {
                 const isAtEdge = self.progress <= 0 || self.progress >= 1;
                 document
                     .querySelectorAll('.title')
-                    .forEach((titlesContainer, index) => {
+                    .forEach((titlesContainer) => {
                         const title1 =
                             titlesContainer.querySelector('.title-1');
                         const title2 =

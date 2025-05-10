@@ -38,8 +38,7 @@ export const Section1 = () => {
                 '-=1'
             );
 
-        // Optional hover effects
-        sectionRef.current &&
+        if (sectionRef.current) {
             gsap.to(imageRef.current, {
                 scale: 1.05,
                 duration: 2.5,
@@ -47,6 +46,7 @@ export const Section1 = () => {
                 yoyo: true,
                 ease: 'sine.inOut',
             });
+        }
     }, []);
 
     return (
@@ -71,7 +71,10 @@ export const Section1 = () => {
                     ref={textRef}
                     className="text-lg md:text-xl max-w-2xl text-gray-200 leading-relaxed"
                 >
-                    We are a couple who loves to travel and visit SwingerClubs. We would like to get in touch with other couples when we are traveling and setup a meeting at SwingerClubs and maybe hotel sleepovers.
+                    We are a couple who loves to travel and visit SwingerClubs.
+                    We would like to get in touch with other couples when we are
+                    traveling and setup a meeting at SwingerClubs and maybe
+                    hotel sleepovers.
                 </p>
 
                 <div className="mt-8">

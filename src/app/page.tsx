@@ -13,7 +13,7 @@ export default function Home() {
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
-        let smoother = ScrollSmoother.create({
+        const smoother = ScrollSmoother.create({
             wrapper: smoothWrapper.current,
             content: smoothContent.current,
             smooth: 1.5,

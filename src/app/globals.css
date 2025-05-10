@@ -12,7 +12,6 @@ body {
     color: white;
 }
 
-/* globals.css */
 html,
 body {
     cursor: none;
@@ -65,7 +64,6 @@ body {
     padding: 0;
 }
 
-/* Titles styling */
 .titles {
     position: absolute;
     top: 0;
@@ -120,7 +118,6 @@ body {
     z-index: 1;
 }
 
-/* Enhanced Card styling */
 .images {
     position: absolute;
     top: 50%;
@@ -189,7 +186,6 @@ body {
     filter: brightness(0.95) contrast(1.1);
 }
 
-/* Section styling */
 section {
     position: relative;
     width: 100vw;
@@ -203,7 +199,6 @@ section {
     position: relative;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
     .card {
         width: 280px;
