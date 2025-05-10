@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import { CustomCursor } from '@/components';
+import { CustomCursor,  HeaderAnimation } from '@/components';
 
 const geistSans = Geist({
     variable: '--font-geist-sans',
@@ -27,7 +27,13 @@ export default function RootLayout({
         <html lang="en">
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                style={{
+                    WebkitFontSmoothing: 'antialiased',
+                    MozOsxFontSmoothing: 'grayscale',
+                    textRendering: 'optimizeSpeed',
+                }}
             >
+                <HeaderAnimation />
                 <CustomCursor />
                 {children}
             </body>
