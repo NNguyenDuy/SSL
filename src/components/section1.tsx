@@ -54,7 +54,7 @@ export const Section1 = () => {
             ref={sectionRef}
             className="hero relative flex flex-col md:flex-row min-h-[90vh] bg-gradient-to-br from-black to-red-900 overflow-hidden"
         >
-            <div className="absolute inset-0  opacity-10 mix-blend-overlay"></div>
+            <div className="absolute inset-0 opacity-10 mix-blend-overlay"></div>
             <div
                 ref={overlayRef}
                 className="absolute inset-0 bg-black transform origin-left"
@@ -103,6 +103,7 @@ export const Section1 = () => {
                             fill
                             className="object-contain object-center"
                             priority
+                            loading="eager"
                         />
                     </div>
                 </div>

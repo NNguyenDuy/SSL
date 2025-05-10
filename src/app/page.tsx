@@ -1,10 +1,20 @@
 'use client';
 
-import { Section1, Section2, Section3 } from '@/components';
+import { Section1, Section2 } from '@/components';
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+
+const Section3 = dynamic(
+    () => import('@/components').then((mod) => mod.Section3),
+    {
+        ssr: false,
+        loading: () => <div className="min-h-[50vh]" />,
+    }
+);
 
 export default function Home() {
     const smoothWrapper = useRef(null);
@@ -76,6 +86,27 @@ export default function Home() {
             }
         );
 
+        gsap.fromTo(
+            '.end',
+            {
+                y: '25%',
+                opacity: 0,
+                scale: 0.95,
+            },
+            {
+                y: '0%',
+                opacity: 1,
+                scale: 1,
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: '.end',
+                    start: 'top bottom',
+                    end: 'top center',
+                    scrub: 1,
+                },
+            }
+        );
+
         return () => {
             smoother.kill();
             ScrollTrigger.getAll().forEach((st) => st.kill());
@@ -90,8 +121,9 @@ export default function Home() {
                     <div className="absolute left-0 right-0 top-0 h-32 z-10 pointer-events-none"></div>
                     <Section2 />
                 </div>
-
-                <Section3 />
+                <Suspense fallback={<div className="min-h-[50vh]" />}>
+                    <Section3 />
+                </Suspense>
             </div>
         </div>
     );
