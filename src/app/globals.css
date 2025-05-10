@@ -1,26 +1,223 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+body {
+    background: linear-gradient(
+        to bottom,
+        #1a1a1a 0,
+        #380000 20vh,
+        #380000 calc(100% - 20vh),
+        #1a1a1a calc(100% - 0vh)
+    );
+    overflow-x: hidden;
+    color: white;
+}
+
+/* globals.css */
+html,
+body {
+    cursor: none;
+}
+
+.custom-cursor {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: rgba(255, 0, 0, 0.2);
+    border: 2px solid #ff0000;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    transition: transform 0.15s ease, width 0.2s ease, height 0.2s ease,
+        background-color 0.2s ease;
+    mix-blend-mode: difference;
+}
+
+.custom-cursor.clicking {
+    transform: translate(-50%, -50%) scale(0.8) !important;
+    background-color: rgba(255, 255, 255, 0.6) !important;
+    border-color: #ffffff !important;
+}
+
+.custom-cursor.hovering {
+    background-color: rgba(255, 0, 0, 0.4) !important;
+    border-color: #ff3030 !important;
+}
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+    --primary-color: #ff3e78;
+    --secondary-color: #7e30e1;
+    --accent-color: #36caff;
+    --dark-bg: #0d0d1a;
+    --light-text: #f1f1f1;
+    --title-shadow: 0 0 10px rgba(255, 62, 120, 0.7);
+    --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --card-glow: 0 0 15px rgba(255, 62, 120, 0.5);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--dark-bg);
+    color: var(--light-text);
+    font-family: 'Montserrat', 'Segoe UI', sans-serif;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+/* Titles styling */
+.titles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 400vw;
+    height: 100vh;
+    display: flex;
+    will-change: transform;
+}
+
+.title {
+    position: relative;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+}
+
+.title h1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 12vw;
+    font-weight: 900;
+    font-style: italic;
+    will-change: transform;
+    text-transform: uppercase;
+    letter-spacing: -0.03em;
+    margin: 0;
+}
+
+.title-1 {
+    color: var(--primary-color);
+    filter: drop-shadow(0 0 15px rgba(255, 62, 120, 0.5));
+    opacity: 0.9;
+    z-index: 3;
+}
+
+.title-2 {
+    color: var(--secondary-color);
+    filter: drop-shadow(0 0 15px rgba(126, 48, 225, 0.5));
+    opacity: 0.7;
+    z-index: 2;
+}
+
+.title-3 {
+    color: var(--accent-color);
+    filter: drop-shadow(0 0 15px rgba(54, 202, 255, 0.5));
+    opacity: 0.5;
+    z-index: 1;
+}
+
+/* Enhanced Card styling */
+.images {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 250vw;
+    height: 250vh;
+    transform-style: preserve-3d;
+    perspective: 2000px;
+    z-index: -1;
+}
+
+.card {
+    position: absolute;
+    width: 350px;
+    height: 500px;
+    border-radius: 24px;
+    transform-style: preserve-3d;
+    will-change: transform;
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    transition: box-shadow 0.5s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(255, 62, 120, 0.2),
+        rgba(126, 48, 225, 0.1)
+    );
+    z-index: 1;
+    opacity: 0.7;
+    border-radius: 24px;
+}
+
+.card-1 {
+    box-shadow: 0 8px 32px rgba(255, 62, 120, 0.3);
+}
+
+.card-2 {
+    box-shadow: 0 8px 32px rgba(126, 48, 225, 0.3);
+}
+
+.card-3 {
+    box-shadow: 0 8px 32px rgba(54, 202, 255, 0.3);
+}
+
+.card-4 {
+    box-shadow: 0 8px 32px rgba(255, 62, 120, 0.3);
+}
+
+.card-5 {
+    box-shadow: 0 8px 32px rgba(126, 48, 225, 0.3);
+}
+
+.card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1.05);
+    transition: transform 0.5s ease;
+    filter: brightness(0.95) contrast(1.1);
+}
+
+/* Section styling */
+section {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.stick {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card {
+        width: 280px;
+        height: 400px;
+    }
+
+    .title h1 {
+        font-size: 14vw;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        width: 220px;
+        height: 320px;
+    }
 }
