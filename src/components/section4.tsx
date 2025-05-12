@@ -61,7 +61,7 @@ export const Section4 = () => {
         playsInline
         className="absolute inset-0 w-full h-full object-cover opacity-40 blur-sm z-0"
       >
-        <source src="/audio/sexy.mp4" type="video/mp4" />
+        <source src="/audio/sexy2.mp4" type="video/mp4" />
       </video>
 
       <div
