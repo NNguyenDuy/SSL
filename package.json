@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "dat.gui": "0.7.9",
     "gsap": "3.13.0",
     "lenis": "1.3.1",
     "next": "15.3.2",
