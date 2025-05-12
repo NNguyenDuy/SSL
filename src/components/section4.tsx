@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import Image from 'next/image';
 
 const images = Array.from({ length: 10 }).map(
     (_, i) => `/images/img${i + 1}.png`
@@ -86,10 +87,12 @@ export const Section4 = () => {
                             background: 'black',
                         }}
                     >
-                        <img
+                        <Image
                             src={src}
                             alt={`Flyer-${i}`}
                             className="w-full h-full object-cover"
+                            fill
+                            loading='lazy'
                         />
                     </div>
                 ))}

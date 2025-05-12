@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import Image from 'next/image';
 
 export const Section3 = () => {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -93,10 +94,12 @@ export const Section3 = () => {
                         transformOrigin: 'center center',
                     }}
                 >
-                    <img
+                    <Image
                         src="/images/img5.png"
                         alt="3D Art"
                         className="w-full h-full object-cover"
+                        fill
+                        loading="lazy"
                     />
                 </div>
             </div>
