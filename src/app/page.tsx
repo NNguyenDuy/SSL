@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
+import Section4 from '@/components/section4';
 
 const Section3 = dynamic(
     () => import('@/components').then((mod) => mod.Section3),
@@ -123,6 +124,9 @@ export default function Home() {
                 </div>
                 <Suspense fallback={<div className="min-h-[50vh]" />}>
                     <Section3 />
+                </Suspense>
+                <Suspense fallback={<div className="min-h-[50vh]" />}>
+                    <Section4 />
                 </Suspense>
             </div>
         </div>

@@ -1,47 +1,20 @@
 @import 'tailwindcss';
 
-:root {
-    --primary-color: #ff3e78;
-    --secondary-color: #7e30e1;
-    --accent-color: #36caff;
-    --dark-bg: #0d0d1a;
-    --light-text: #f1f1f1;
-    --title-shadow: 0 0 10px rgba(255, 62, 120, 0.7);
-    --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-    --card-glow: 0 0 15px rgba(255, 62, 120, 0.5);
-}
-
-html,
 body {
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    cursor: none;
-}
-
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-    display: none;
-}
-
-body {
-    background-color: var(--dark-bg);
-    color: var(--light-text);
-    font-family: 'Montserrat', 'Segoe UI', sans-serif;
-    overflow-x: hidden;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(
-        to bottom,
-        #1a1a1a 0,
-        #380000 20vh,
-        #380000 calc(100% - 20vh),
-        #1a1a1a calc(100% - 0vh)
-    );
+    background: linear-gradient(to bottom,
+            #1a1a1a 0,
+            #380000 20vh,
+            #380000 calc(100% - 20vh),
+            #1a1a1a calc(100% - 0vh));
     overflow-x: hidden;
     color: white;
 }
 
-/* custom cursor */
+html,
+body {
+    cursor: none;
+}
+
 .custom-cursor {
     position: fixed;
     width: 20px;
@@ -67,6 +40,26 @@ body {
 .custom-cursor.hovering {
     background-color: rgba(255, 0, 0, 0.4) !important;
     border-color: #ff3030 !important;
+}
+
+:root {
+    --primary-color: #ff3e78;
+    --secondary-color: #7e30e1;
+    --accent-color: #36caff;
+    --dark-bg: #0d0d1a;
+    --light-text: #f1f1f1;
+    --title-shadow: 0 0 10px rgba(255, 62, 120, 0.7);
+    --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --card-glow: 0 0 15px rgba(255, 62, 120, 0.5);
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: var(--light-text);
+    font-family: 'Montserrat', 'Segoe UI', sans-serif;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
 }
 
 .titles {
@@ -152,11 +145,9 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-        135deg,
-        rgba(255, 62, 120, 0.2),
-        rgba(126, 48, 225, 0.1)
-    );
+    background: linear-gradient(135deg,
+            rgba(255, 62, 120, 0.2),
+            rgba(126, 48, 225, 0.1));
     z-index: 1;
     opacity: 0.7;
     border-radius: 24px;
@@ -221,3 +212,37 @@ section {
         height: 320px;
     }
 }
+
+/* Section3  */
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin-slow {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-float {
+    animation: float 4s ease-in-out infinite;
+}
+
+.animate-spin-slow {
+    animation: spin-slow 30s linear infinite;
+}
+
