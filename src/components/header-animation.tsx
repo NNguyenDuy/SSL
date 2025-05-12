@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 export const HeaderAnimation = () => {
     const headerRef = useRef(null);
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
     const menuRef = useRef(null);
 
     useEffect(() => {
