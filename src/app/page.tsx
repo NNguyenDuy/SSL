@@ -1,205 +1,136 @@
 "use client";
 
-import { Section1 } from "@/components";
-import { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollSmoother } from "gsap/ScrollSmoother";
-import dynamic from "next/dynamic";
-import { Suspense } from "react";
-import Section4 from "@/components/section4";
+import React, { useEffect, useRef, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import type { Swiper as SwiperClass } from "swiper";
+import { Mousewheel, Keyboard } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/mousewheel";
+import "swiper/css/keyboard";
 
-const Section3 = dynamic(
-  () => import("@/components").then((mod) => mod.Section3),
-  { ssr: false, loading: () => <div className="min-h-[50vh]" /> }
-);
+import Section4 from "@/components/section4";
+import { Section1, Section3 } from "@/components";
 
 export default function Home() {
-  const smoothWrapper = useRef<HTMLDivElement>(null);
-  const smoothContent = useRef<HTMLDivElement>(null);
-
-  const [sections, setSections] = useState<HTMLElement[]>([]);
-  const [currentIdx, setCurrentIdx] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [voiceName, setVoiceName] = useState<string>("-");
-  const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  const lastSpokenIdx = useRef<number>(-1);
+  const voicesRef = useRef<SpeechSynthesisVoice[]>([]);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
-    const smoother = ScrollSmoother.create({
-      wrapper: smoothWrapper.current!,
-      content: smoothContent.current!,
-      smooth: 1.5,
-      effects: true,
-      normalizeScroll: true,
-      ignoreMobileResize: true,
-    });
-    gsap.fromTo(
-      ".hero",
-      { y: 0, opacity: 1 },
-      {
-        y: "-30%",
-        opacity: 0.2,
-        ease: "power1.inOut",
-        scrollTrigger: {
-          trigger: ".hero",
-          start: "top top",
-          end: "bottom top",
-          scrub: 1.2,
-        },
-      }
-    );
-    return () => {
-      smoother.kill();
-      ScrollTrigger.getAll().forEach((st) => st.kill());
+    const synth = window.speechSynthesis;
+    const updateVoices = () => {
+      voicesRef.current = synth.getVoices();
+      setReady(true);
     };
+    synth.addEventListener("voiceschanged", updateVoices);
+    updateVoices();
+    return () => synth.removeEventListener("voiceschanged", updateVoices);
   }, []);
 
-  useEffect(() => {
-    const secs = Array.from(
-      document.querySelectorAll<HTMLElement>(".c-section")
-    );
-    setSections(secs);
+  const slides = [
+    {
+      Comp: Section1,
+      text: "Welcome to Section One!",
+      voiceName: "Section One ",
+    },
+    {
+      Comp: Section3,
+      text: "Here is Section Sexy Girl.",
+      voiceName: "Section Two",
+    },
+    {
+      Comp: Section4,
+      text: "Finally, Section Video Sexy Girl",
+      voiceName: "Section Three",
+    },
+  ];
 
-    const cb: IntersectionObserverCallback = (entries) => {
-      entries.forEach((ent) => {
-        if (!ent.isIntersecting) return;
-        const idx = secs.indexOf(ent.target as HTMLElement);
-        if (idx === -1 || idx === currentIdx) return;
+  const swiperRef = useRef<SwiperClass | null>(null);
+  const [idx, setIdx] = useState(0);
+  const [playing, setPlaying] = useState(false);
 
-        goToSection(idx);
-
-        if (isPlaying && idx !== lastSpokenIdx.current) {
-          window.speechSynthesis.cancel();
-          speakSection(secs[idx], idx);
-        }
-      });
-    };
-
-    const obs = new IntersectionObserver(cb, { threshold: 0.6 });
-    secs.forEach((s) => obs.observe(s));
-    observerRef.current = obs;
-    return () => obs.disconnect();
-  }, [currentIdx, isPlaying]);
-
-  const goToSection = (idx: number) => {
-    const clamped = Math.max(0, Math.min(idx, sections.length - 1));
-    setCurrentIdx(clamped);
-    const sec = sections[clamped];
-    sec.scrollIntoView({ behavior: "smooth", block: "start" });
-    setVoiceName(sec.dataset.voice || "-");
-  };
-
-  const speakSection = (sec: HTMLElement, idx: number) => {
-    if (utteranceRef.current) window.speechSynthesis.cancel();
-    const utt = new SpeechSynthesisUtterance(sec.innerText);
-    const match = window.speechSynthesis
-      .getVoices()
-      .find((v) => v.name.includes(sec.dataset.voice || ""));
+  const speakText = (text: string, voiceName: string) => {
+    const synth = window.speechSynthesis;
+    synth.cancel();
+    const utt = new SpeechSynthesisUtterance(text);
+    const match = voicesRef.current.find((v) => v.name.includes(voiceName));
     if (match) utt.voice = match;
-    utteranceRef.current = utt;
-    lastSpokenIdx.current = idx;
-    window.speechSynthesis.speak(utt);
+    utt.rate = 1;
+    utt.pitch = 1;
+    utt.volume = 1;
+    synth.speak(utt);
   };
 
-  const detectCurrentSection = (): number => {
-    const vh = window.innerHeight;
-    for (let i = 0; i < sections.length; i++) {
-      const rect = sections[i].getBoundingClientRect();
-      if (rect.top >= 0 && rect.top < vh * 0.3) return i;
+  const onSlideChange = (sw: SwiperClass) => {
+    setIdx(sw.activeIndex);
+    if (playing && ready) {
+      const { text, voiceName } = slides[sw.activeIndex];
+      speakText(text, voiceName);
     }
-    return 0;
   };
 
-  const handlePlayPause = () => {
-    if (!isPlaying) {
-      const idx = detectCurrentSection();
-      goToSection(idx);
-      speakSection(sections[idx], idx);
-      setIsPlaying(true);
+  const togglePlay = () => {
+    if (!ready) return; 
+    if (!playing) {
+      const { text, voiceName } = slides[idx];
+      speakText(text, voiceName);
+      setPlaying(true);
     } else {
       window.speechSynthesis.cancel();
-      setIsPlaying(false);
+      setPlaying(false);
     }
   };
 
-  const handlePrev = () => {
-    const prev = Math.max(currentIdx - 1, 0);
-    goToSection(prev);
-    if (isPlaying && prev !== lastSpokenIdx.current) {
-      window.speechSynthesis.cancel();
-      speakSection(sections[prev], prev);
-    }
-  };
-
-  const handleNext = () => {
-    const next = Math.min(currentIdx + 1, sections.length - 1);
-    goToSection(next);
-    if (isPlaying && next !== lastSpokenIdx.current) {
-      window.speechSynthesis.cancel();
-      speakSection(sections[next], next);
-    }
-  };
+  const goPrev = () => swiperRef.current?.slidePrev();
+  const goNext = () => swiperRef.current?.slideNext();
 
   return (
-    <div ref={smoothWrapper} className="smooth-wrapper">
-      <div ref={smoothContent} className="smooth-content">
-        <section className="c-section" data-voice="Alice">
-          <Section1 />
-        </section>
+    <div className="relative">
+      <Swiper
+        onSwiper={(sw) => (swiperRef.current = sw)}
+        direction="vertical"
+        slidesPerView={1}
+        mousewheel
+        keyboard
+        modules={[Mousewheel, Keyboard]}
+        onSlideChange={onSlideChange}
+        style={{ height: "100vh" }}
+      >
+        {slides.map(({ Comp }, i) => (
+          <SwiperSlide key={i}>
+            <Comp />
+          </SwiperSlide>
+        ))}
+      </Swiper>
 
-        <Suspense fallback={<div className="min-h-[50vh]" />}>
-          <section className="c-section" data-voice="Charlie">
-            <Section3 />
-          </section>
-        </Suspense>
+      <div
+        className="fixed bottom-4 left-1/2 transform -translate-x-1/2
+                      bg-gray-800 bg-opacity-90 text-white
+                      flex items-center space-x-4 px-4 py-2
+                      rounded-full shadow-lg z-50"
+      >
+        <button onClick={goPrev} className="p-2 hover:bg-gray-700 rounded-full">
+          ⏮
+        </button>
 
-        <Suspense fallback={<div className="min-h-[50vh]" />}>
-          <section className="c-section" data-voice="Dave">
-            <Section4 />
-          </section>
-        </Suspense>
-
-        <div
-          className="fixed bottom-4 left-1/2 transform -translate-x-1/2 
-                        bg-gray-800 bg-opacity-90 text-white 
-                        flex items-center space-x-4 px-4 py-2 
-                        rounded-full shadow-lg z-50"
-        >
+        <div className="relative">
+          {playing && (
+            <span className="absolute inset-0 animate-ping rounded-full bg-white opacity-20" />
+          )}
           <button
-            onClick={handlePrev}
-            className="p-2 hover:bg-gray-700 rounded-full transition"
-            aria-label="Previous"
+            onClick={togglePlay}
+            className="relative z-10 p-3 bg-white text-gray-800 rounded-full shadow-lg hover:scale-105 transition"
           >
-            ⏮
+            {playing ? "⏸️" : "▶️"}
           </button>
-
-          <div className="relative">
-            {isPlaying && (
-              <span className="absolute inset-0 animate-ping rounded-full bg-white opacity-20"></span>
-            )}
-            <button
-              onClick={handlePlayPause}
-              className="relative z-10 p-3 bg-white text-gray-800 rounded-full 
-                         shadow-lg hover:scale-105 transform transition"
-              aria-label={isPlaying ? "Pause" : "Play"}
-            >
-              {isPlaying ? "⏸️" : "▶️"}
-            </button>
-          </div>
-
-          <button
-            onClick={handleNext}
-            className="p-2 hover:bg-gray-700 rounded-full transition"
-            aria-label="Next"
-          >
-            ⏭
-          </button>
-
-          <span className="ml-2 text-sm font-medium">{voiceName}</span>
         </div>
+
+        <button onClick={goNext} className="p-2 hover:bg-gray-700 rounded-full">
+          ⏭
+        </button>
+
+        <span className="ml-2 text-sm font-medium">
+          {slides[idx].voiceName}
+        </span>
       </div>
     </div>
   );
