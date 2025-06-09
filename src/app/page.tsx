@@ -29,7 +29,7 @@ export default function Home() {
   const slides = [
     {
       Comp: Section1,
-      text: "Welcome to Section One!",
+      text: "Welcome to Section Ones!",
       voiceName: "Section One ",
     },
     {
